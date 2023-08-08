@@ -1,0 +1,24 @@
+{% extends 'users/base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <form method="POST" class="p-4 p-md-5 border rounded-3 bg-light">
+        {% csrf_token %}
+        <div class="form-floating mb-3">
+            {% render_field form.email class="form-control" %}
+            <label for="floatingInput">Email Adresi</label>
+        </div>
+        <div class="form-floating mb-3">
+            {% render_field form.password1 class="form-control" %}
+            <label for="floatingInput">Şifre</label>
+        </div>
+        <div class="form-floating mb-3">
+            {% render_field form.password2 class="form-control" %}
+            <label for="floatingInput">Şifre Tekrar</label>
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Kayıt Ol</button>
+        <small class="text-muted">Zaten bir hesabın var mı ?</small><a href="{% url 'login' %}"> Giriş Yap</a>
+    </form>
+{% endblock content %}
+    
