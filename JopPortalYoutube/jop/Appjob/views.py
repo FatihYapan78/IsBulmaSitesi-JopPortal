@@ -33,7 +33,7 @@ def register_recruiter(request):
             var.is_recruiter = True
             var.username = var.email
             var.save()
-            Resume.objects.create(user=var)
+            Company.objects.create(user=var)
             messages.info(request, "Kullanıcı Başarılı bir şekilde oluşturuldu.")
             return redirect("login")
         else:
@@ -55,8 +55,8 @@ def login_user(request):
             return redirect("dashboard")
         else:
             messages.warning(request,"Hatalı giriş")
-    else:
-        return render(request, "users/login.html")
+    
+    return render(request, "users/login.html")
 
 def logout_user(request):
     logout(request)

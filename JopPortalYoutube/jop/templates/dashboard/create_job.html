@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="row">
+    <h5 class="mb-3">İş İlanı Oluştur</h5>
+    <form method="POST" class="p-4 p-md-5 border rounded-3 bg-light">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="floatingInput">İş Adı</label>
+            {% render_field form.title class="form-control" %}
+        </div>
+        <div class="mb-3">
+            <label for="floatingInput">Location</label>
+            {% render_field form.location class="form-control" %}
+        </div>
+        <div class="mb-3">
+            <label for="floatingInput">Salary</label>
+            {% render_field form.salary class="form-control" %}
+        </div>
+        <div class="mb-3">
+            <label for="floatingInput">Requirements</label>
+            {% render_field form.requirements|attr:"rows:3" class="form-control" %}
+        </div>
+        <div class="mb-3">
+            <label for="floatingInput">Ideal Candidate</label>
+            {% render_field form.ideal_candidate|attr:"rows:3" class="form-control" %}
+        </div>
+        <div class="mb-3">
+            <label>Available</label>
+            {% render_field form.is_available class="form-check-input" %}
+        </div>
+
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Send</button>
+    </form>
+</div>
+{% endblock content %}
+    

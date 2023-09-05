@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block content %}
+    <section>
+        <div class="container-fluid py-5">
+            <h2 class="display-5 fw-bold">{{ job.title }}</h2>
+            <p class="col-md-8 fs-5 mt-3">{{ job.location }} | Remote | {{ job.salary|intcomma }}</p>
+            
+            {% if has_applited %}
+            <p class="text-danger">Bu İlana Zaten Başvuru Yaptınız!!!</p>
+            {% else %}
+            <a href="{% url 'applyjob' job.id %}" class="btn btn-primary btn-lg">Apply Now</a>
+            {% endif %}
+                
+        </div>
+    </section>
+
+    <div>
+        <section>
+            <h5>Job Requirements</h5>
+            <p>
+                {{ job.requirements }}
+            </p>
+        </section>
+    </div>
+
+    <div>
+        <section>
+            <h5>Ideal Candidate</h5>
+            <p>
+                {{ job.ideal_candidate }}
+            </p>
+        </section>
+    </div>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Şirket Hakkında</h5>
+                        <h6 class="card-title">{{ job.company.name }}</h6>
+                        <p class="card-text">Company Location : {{ job.company.city }}</p>
+                        <p class="card-text">{{ job.company.est_date }}</p>
+                    </div>
+                </div>
+            </div>
+            
+    </div>
+{% endblock content %}
+    
