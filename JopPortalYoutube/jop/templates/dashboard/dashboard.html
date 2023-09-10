@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load humanize %}
-
+{% load widget_tweaks %}
 
 {% block content %}
 
@@ -18,39 +18,54 @@
             <div class="card">
                 <div class="card-body">
                     <form class="row gy-2 gx-3 align-items-center">
-                        <div class="col-sm-2">
-                            <label class="visually-hidden" for="autoSizingInput">Name</label>
-                            <input type="text" class="form-control" id="autoSizingInput" placeholder="Job Keyword">
+                        <div class="col-sm-3">
+                            <label for="autoSizingInput">Name</label>
+                            {% render_field filter.form.title class="form-control" id="autoSizingInput" placeholder="Job Keyword" %}
+                            <!-- <datalist id="jobs">
+                                
+                                {% for job in filter_job %}
+                                    <option value="{{ job.title }}"></option>
+                                {% endfor %}
+                                    
+                            </datalist> -->
+                            
                         </div>
                         <div class="col-sm-3">
-                            <label class="visually-hidden" for="autoSizingSelect">Select Locaiton</label>
-                            <select class="form-select" id="autoSizingSelect">
-                                <option selected>Select Locaiton</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
+                            <label for="autoSizingSelect">Select Locaiton</label>
+                            {% render_field filter.form.location %}
+                        </div>
+                        <div class="col-sm-3 form-check">
+                            <label for="flexCheckDefault">Choose Job Type</label>
+                            {% render_field filter.form.job_type id="flexCheckDefault" %}
                         </div>
                         <div class="col-sm-3">
-                            <label class="visually-hidden" for="autoSizingSelect">Choose Job Type</label>
-                            <select class="form-select" id="autoSizingSelect">
-                                <option selected>Choose Job Type</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
+                            <label for="autoSizingSelect">Select Insdustry</label>
+                            {% render_field filter.form.industry %}
                         </div>
-                        <div class="col-sm-3">
-                            <label class="visually-hidden" for="autoSizingSelect">Select Insdustry</label>
-                            <select class="form-select" id="autoSizingSelect">
-                                <option selected>Select Industry</option>
-                                <option value="1">One</option>
-                                <option value="2">Two</option>
-                                <option value="3">Three</option>
-                            </select>
-                        </div>
-                        <div class="col-auto">
-                            <button type="button" class="btn btn-primary">Search</button>
+                        
+                        
+                        <div class="row">
+                            <div class="col-sm-3">
+
+                                <label for="autoSizingSelect">Salary Range</label>
+                                <div class="d-flex justify-content-center align-items-center">
+                                    {% render_field filter.form.salary class="form-control border border-1 border-dark" %}
+                                </div>
+
+                            </div>
+                            <div class="col-sm-3 d-flex justidy-content-center align-items-center">
+                                <select name="sort" id="sort-list" class="form-select" style="margin-left: auto;">
+                                    <option value="" id="placeholder">Sort</option>
+                                    <option id="salary" value="salary" {% if sort == 'salary' %} selected {% endif %}
+                                    >Salary: Low To High</option>
+                                    <option id="-salary" value="-salary" {% if sort == '-salary' %} selected {% endif %}>Salary: High To Low</option>
+                                    <option id="title" value="title" {% if sort == 'title' %} selected {% endif %}>A-Z</option>
+                                    <option id="-title" value="-title" {% if sort == '-title' %} selected {% endif %}>Z-A</option>
+                                  </select>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-primary">Filter</button>
+                            </div>
                         </div>
                     </form>
                 </div>
@@ -64,9 +79,9 @@
 </section>
 <div class="row row-cols-1 row-cols-md-3 g-4">
     
-    {% if jobs %}
+
         
-        {% for job in jobs %}
+        {% for job in filter_job %}
         <div class="col">
             <div class="card h-100">
                 <div class="card-body">
@@ -74,6 +89,8 @@
                     <p class="card-text">Salary: {{ job.salary|intcomma }}</p>
                     <p class="card-text">Location: {{ job.location }}</p>
                     <p class="card-text">Company: {{ job.company }}</p>
+                    <p class="card-text">Job Type: {{ job.job_type }}</p>
+                    <p class="card-text">Industry: {{ job.industry }}</p>
                 </div>
                 <div class="card-footer">
                     <small class="text-muted">{{ job.addjob|naturaltime }}</small>
@@ -82,31 +99,38 @@
         </div>
             
         {% endfor %}
-            
-    {% endif %}
+
         
 </div>
 <div class="row align-items-center">
     <div class="col-md-10 mx-auto col-lg-2 mt-4">
-        <nav>
+        <nav aria-label="Page navigation example">
             <ul class="pagination">
-                <li class="page-item disabled">
-                    <a href="#" class="page-link" tabindex="-1">Prev</a>
-                </li>
-                <li class="page-item active">
-                    <a href="#" class="page-link" tabindex="-1">1</a>
-                </li>
+                
+                {% if filter_job.has_previous %}
                 <li class="page-item">
-                    <a href="#" class="page-link" tabindex="-1">2</a>
+                  <a class="page-link" href="{{path}}&page=1" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                  </a>
                 </li>
-                <li class="page-item">
-                    <a href="#" class="page-link" tabindex="-1">3</a>
-                </li>
-                <li class="page-item">
-                    <a href="#" class="page-link" tabindex="-1">Next</a>
-                </li>
+                <li class="page-item"><a class="page-link" href="{{path}}&page={{ filter_job.pervious_page_number }}">Geri</a></li>
+                <li class="page-item"><a class="page-link" href="{{path}}&page={{ filter_job.number|add:'-1' }}">{{ filter_job.number|add:"-1" }}</a></li>
+                {% endif %}
+                    
+              <li class="page-item"><a class="page-link" href="{{path}}&page={{ filter_job.number }}">{{ filter_job.number }}</a></li>
+              
+              {% if filter_job.has_next %}
+              <li class="page-item"><a class="page-link" href="{{path}}&page={{ filter_job.number|add:'1' }}">{{ filter_job.number|add:"1" }}</a></li>
+              <li class="page-item"><a class="page-link" href="{{path}}&page={{ filter_job.next_page_number }}">İleri</a></li>
+              <li class="page-item">
+                <a class="page-link" href="{{path}}&page={{ filter_job.paginator.num_pages }}" aria-label="Next">
+                  <span aria-hidden="true">&raquo;</span>
+                </a>
+              </li>
+              {% endif %}
+                
             </ul>
-        </nav>
+          </nav>
     </div>
 </div>
     
@@ -136,4 +160,15 @@
 </section>
 {% endif %}
 {% endblock content %}
+
+
+{% block js %}
+<script>
+    $( function() {
+        $( "#autoSizingInput" ).autocomplete({
+          source: '{% url "dashboard" %}'
+        });
+      } );
+</script>
+{% endblock js %}
     

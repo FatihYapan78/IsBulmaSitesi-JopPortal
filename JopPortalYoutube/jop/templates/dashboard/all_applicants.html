@@ -28,7 +28,7 @@
                         <td>{{ applicant.resume.job_title }}</td>
                         <td>{{ applicant.timestamp }}</td>
                         
-                        <td><a href="{% url 'update_job' job.id %}" class="btn btn-primary btn-sm"><small>Download Resume</small></a></td>
+                        <td><a target="_blank" href="{{ applicant.resume.upload_resume.url }}" class="btn btn-primary btn-sm"><small>Download Resume</small></a></td>
                     </tr>
                     {% endfor %}
                 </tbody>
